@@ -1,0 +1,101 @@
+{%- macro topic(ts) %}
+    <ul class="list-group">
+        {% for t in ts %}
+            <li class="list-group-item">
+            {% if t is none %}
+                已删除的主题
+            {% else %}
+                {% set u = t.user() %}
+                <span class="badge">{{ t.num_of_replies() }}/{{ t.views }}</span>
+                <a href="{{ url_for('user.profile', username=u.username) }}">
+                    <img class="user-avatar-sm" src="{{ u.user_avatar }}">
+                </a>
+                <span class="label label-default">{{ t.board_title() }}</span>
+                <a class="lead" href="{{ url_for('topic.detail', t_id=t.id) }}"
+                   title="{{ t.title }}">  {{ t.title }}</a>
+                <span class="last-time">
+                    {% if t.last_reply() %}
+                        <a href="{{ url_for('topic.detail', t_id=t.id, _anchor=t.num_of_replies()) }}">
+                            <img class="user-avatar-xs" src="{{ t.last_reply().user().user_avatar }}">
+                        </a>
+                    {% endif %}
+                    <small><span class="time-stamp text-muted">{{ t.updated_time }}</span></small>
+                </span>
+            {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro -%}
+
+{%- macro mail(ms) %}
+    <div class="list-group">
+        {% for m in ms %}
+            <a href="{{ url_for('mail.detail', m_id=m.id) }}" class="list-group-item">
+                {% set sender = m.sender() %}
+                <img class="user-avatar-sm" src="{{ sender.user_avatar }}">
+                <span class="text-muted">• {{ sender.username }}</span>
+                <span class="lead">{{ m.title }}</span>
+                <span class="last-time">
+                    <small>
+                        <span class="text-muted">发送给 • {{ m.receiver().username }} •</span>
+                        <span class="time-stamp text-muted">{{ m.updated_time }}</span>
+                    </small>
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+{% endmacro -%}
+
+{% macro pagination(page, pages, b_id, url='index.index', id=-1) %}
+    <ul class="pagination pagination-sm">
+        {% set len = 4 %}
+        {% if page - len > 1 %}
+            {% set begin = page - len %}
+        {% else %}
+            {% set begin = 1 %}
+        {% endif %}
+        {% if begin + len*2 < pages %}
+            {% set end = begin + len*2 %}
+        {% else %}
+            {% set end = pages %}
+        {% endif %}
+        {% if begin == 1 %}
+            <li class="disabled"><a href="{{ url_for(url, board_id=b_id|default(-1), page=1, id=id) }}">&laquo;</a>
+            </li>
+        {% else %}
+            <li><a href="{{ url_for(url, board_id=b_id|default(-1), page=1, id=id) }}">&laquo;</a></li>
+            <li class="disabled"><a href="#">...</a></li>
+        {% endif %}
+        {% for p in range(begin, end + 1) %}
+            {% if p == page %}
+                <li class="active"><a href="{{ url_for(url, board_id=b_id|default(-1), page=p, id=id) }}">{{ p }}</a>
+                </li>
+            {% else %}
+                <li><a href="{{ url_for(url, board_id=b_id|default(-1), page=p, id=id) }}">{{ p }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if end == pages %}
+            <li class="disabled"><a
+                    href="{{ url_for(url, board_id=b_id|default(-1), page=pages, id=id) }}">&raquo;</a></li>
+        {% else %}
+            <li class="disabled"><a href="#">...</a></li>
+            <li><a href="{{ url_for(url, board_id=b_id|default(-1), page=pages, id=id) }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+{% endmacro %}
+
+{%- macro list_group_div(ls) %}
+    <div class="list-group">
+    {% for l in ls %}
+        {{ caller(l) }}
+    {% endfor %}
+    </div>
+{% endmacro -%}
+
+{%- macro list_group_ul(ls) %}
+    <ul class="list-group">
+    {% for l in ls %}
+        <li class="list-group-item">{{ caller(l) }}</li>
+    {% endfor %}
+    </ul>
+{% endmacro -%}

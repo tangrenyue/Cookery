@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}个人设置{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('设置') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('user.update_data')) %}
+        {{ forms.hidden_input(name='token', value=session.get('token')) }}
+        {{ forms.input(label='用户名', name='username', type='text', value=g.user.username, readonly='readonly') }}
+        {{ forms.textarea(label='个性签名', name='signature', value=g.user.signature, placeholder='这家伙很懒，什么个性签名都没有留下。') }}
+        {{ forms.button('保存设置') }}
+    {% endcall %}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    {% call panels.panel('更改密码') %}
+        {% call forms.form(url_for('user.update_password')) %}
+            {{ forms.hidden_input(name='token', value=session.get('token')) }}
+            {{ forms.input(label='当前密码', name='old_pwd', type='password', placeholder='old password') }}
+            {{ forms.input(label='新密码', name='new_pwd', type='password', placeholder='new password') }}
+            {{ forms.button('更改密码') }}
+        {% endcall %}
+    {% endcall %}
+    {% call panels.panel('上传头像') %}
+        {% call forms.form(url_for('user.update_avatar'), enctype='multipart/form-data') %}
+            {{ forms.hidden_input(name='token', value=session.get('token')) }}
+            {{ forms.input(label='选择头像', name='avatar', type='file') }}
+            {{ forms.button('上传头像') }}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+{% import 'macro/panels.html' as panels %}
+{% import 'macro/lists.html' as lists %}
+{% block title %}{{ user.username }}的个人主页{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('用户信息') }}
+{% endblock %}
+{% block content_body %}
+    <div class="media">
+        <div class="media-left media-middle">
+            <img class="media-object img-rounded user-avatar" src="{{ user.user_avatar }}" title="{{ user.username }}">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading"></h4>
+            {{ user.username }}
+        </div>
+    </div>
+    <p></p>
+    <p class="text-muted">注册时间<span class="time-stamp">{{ user.created_time }}</span></p>
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    {% call panels.panel_heading('最近创建的主题') %}
+        {{ lists.topic(ts) }}
+        {% call panels.panel_footer() %}
+            <a href="{{ url_for('user.topics', id=user.id) }}">察看更多»</a>
+        {% endcall %}
+    {% endcall %}
+    {% call panels.panel_heading('最近回复的主题') %}
+        {{ lists.topic(rts) }}
+        {% call panels.panel_footer() %}
+            <a href="{{ url_for('user.replies', id=user.id) }}">察看更多»</a>
+        {% endcall %}
+    {% endcall %}
+{% endblock %}
+

@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}{{ m.title }}{% endblock %}
+{% block head_static %}
+    <script src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js"></script>
+    <link href="https://cdn.bootcss.com/github-markdown-css/2.8.0/github-markdown.min.css" rel="stylesheet">
+{% endblock %}
+{% block content_header %}
+    {% set sender = m.sender() %}
+    {% set receiver = m.receiver() %}
+    {{ panels.breadcrumb(receiver.username+' 收到的消息', active=false, url=url_for('mail.index')) }}
+    <h3>{{ m.title }}</h3>
+    <div class="text-muted">
+        <small>
+            <span class="about-topic">
+                <span class="pull-right">收信者
+                    <a href="{{ url_for('user.profile', username=receiver.username) }}">{{ receiver.username }}</a>
+                </span>
+                <span>发布于 <span class="time-stamp">{{ m.created_time }}</span></span>
+                <span>发送者
+                    <a href="{{ url_for('user.profile', username=sender.username) }}">{{ sender.username }}</a>
+                </span>
+            </span>
+        </small>
+    </div>
+{% endblock %}
+{% block content_body %}
+    <div class="markdown-text markdown-body">{{ m.content }}</div>
+{% endblock %}
+{% block body_static %}
+    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
+{% endblock %}

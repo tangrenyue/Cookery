@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cookery Club{% endblock %}</title>
+    <link href="https://cdn.bootcss.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js"></script>
+    {% block head_static %}{% endblock %}
+</head>
+<body>
+{% include 'base/navbar.html' %}
+
+<div id="main">
+
+<div class="row">
+<div class="col-md-8">
+    <div id="content">
+        {% include 'base/alert.html' %}
+
+        {% block content %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{% block content_header %}{% endblock %}</div>
+                <div class="panel-body">{% block content_body %}{% endblock %}</div>
+            </div>
+        {% endblock %}
+    </div>
+</div>
+
+<div class="col-md-4">
+        {% block sidebar %}
+            {% include 'base/sidebar.html' %}
+        {% endblock %}
+   </div>
+
+</div>
+</div>
+  <script src="{{ url_for('static', filename='js/time.js') }}"></script>
+{% block body_static %}{% endblock %}
+<footer id="footer">
+    <div id="footer-main" class="small text-muted">
+        <ul class="list-inline">
+            <li class="pull-right"><a href="#top">回到顶部</a></li>
+            <li>欢迎你</li> ·
+            <li>联系我</li>
+        </ul>
+        <p></p><span class="text-muted">食谱分享</span>
+    </div>
+</footer>
+</body>
+</html>

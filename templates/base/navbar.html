@@ -1,0 +1,43 @@
+<nav class="navbar navbar-default" id="top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ url_for('index.index') }}">Cookery Club</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <form class="navbar-form navbar-left" role="search" action="{{ url_for('index.search') }}">
+                <div class="form-group">
+                    <input class="form-control" placeholder="Search" type="text" name="query">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            {%- if g.user %}
+                {% set navbar = [
+                        (url_for('index.index'), '首页'),
+                        (url_for("user.profile", username=g.user.username), g.user.username),
+                        (url_for('mail.index'), '消息'),
+                        (url_for('user.setting'), '设置'),
+                        (url_for('user.log_out'), '登出'),
+                    ] %}
+                {% set counts = g.user.unread_counts() %}
+            {% else %}
+                {% set navbar = [
+                        (url_for('index.index'), '首页'),
+                        (url_for('index.register'), '注册'),
+                        (url_for('index.login'), '登录'),
+                    ] %}
+            {% endif -%}
+            <ul class="nav navbar-nav navbar-right">
+                {% for href, caption in navbar -%}
+                    {% if caption == '消息' and counts != 0 %}
+                        <li><a href="{{ href }}">{{ caption }} <span class="badge">{{ counts }}</span></a></li>
+                    {% else %}
+                    <li><a href="{{ href }}">{{ caption }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if g.user.admin %}
+                    <li><a href="{{ url_for('admin.index') }}">管理员</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

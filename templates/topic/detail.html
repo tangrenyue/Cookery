@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}{{ topic.title }}{% endblock %}
+{% block head_static %}
+    <script src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js"></script>
+    <link href="https://cdn.bootcss.com/github-markdown-css/2.8.0/github-markdown.min.css" rel="stylesheet">
+{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb(topic.board_title(), active=false, url=url_for('index.index', board_id=topic.board_id)) }}
+    <h3>{{ topic.title }}</h3>
+    <div class="text-muted">
+        {% if g.user.id == topic.user_id or g.user.admin %}
+            <span class="pull-right">
+                <a href="{{ url_for('topic.edit', t_id=topic.id, token=session.get('token')) }}">
+                    <span class="glyphicon glyphicon-edit" title="编辑"></span>
+                </a>
+                <a href="{{ url_for('topic.delete', id=topic.id, token=session.get('token')) }}">
+                    <span class="glyphicon glyphicon-trash" title="删除"></span>
+                </a>
+            </span>
+        {% endif %}
+        <small>
+            <span class="about-topic">
+                <span>发布于 <span class="time-stamp">{{ topic.created_time }}</span></span>
+                <span>作者
+                    <a href="{{ url_for('user.profile', username=author.username) }}">{{ author.username }}</a>
+                </span>
+                <span>{{ topic.views }} 次浏览</span>
+                {% if topic.edited_time != 0 %}
+                    <span>修改于 <span class="time-stamp">{{ topic.edited_time }}</span></span>
+                {% endif %}
+            </span>
+        </small>
+    </div>
+{% endblock %}
+{% block content_body %}
+    <div class="markdown-text markdown-body">{{ topic.content }}</div>
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    {% if topic.num_of_replies() %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{ topic.num_of_replies()|string }} 回复
+            </div>
+            <ul class="list-group">
+                {% for r in topic.replies() %}
+                    <li class="list-group-item" id="{{ loop.index }}">
+                        <div class="text-muted">
+                            <small>
+                                {% if g.user.id == r.user_id or g.user.admin %}
+                                    <span class="pull-right">
+                                        <a href="{{ url_for('reply.edit', r_id=r.id, token=session.get('token')) }}">
+                                            <span class="glyphicon glyphicon-edit" title="编辑"></span>
+                                        </a>
+                                        <a href="{{ url_for('reply.delete', id=r.id, token=session.get('token')) }}">
+                                            <span class="glyphicon glyphicon-trash" title="删除"></span>
+                                        </a>
+                                    </span>
+                                {% endif %}
+                                {% set replier = r.user() %}
+                                <img class="user-avatar-sm" src="{{ replier.user_avatar }}">
+                                <a href="{{ url_for('user.profile', username=replier.username) }}">
+                                    <span>{{ replier.username }}</span>
+                                    {% if replier.id == author.id %}
+                                        <span class="label label-success">作者</span>
+                                    {% endif %}
+                                </a>
+                                <span>{{ loop.index }}楼 • <span class="time-stamp">{{ r.created_time }}</span></span>
+                            </small>
+                        </div>
+                        <div class="markdown-text markdown-body">{{ r.content }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% call panels.panel('添加回复') %}
+        {% call forms.form(url_for('reply.add'), class='textarea') %}
+            {{ forms.hidden_input(name='token', value=session.get('token')) }}
+            {{ forms.hidden_input(name='topic_id', value=topic.id) }}
+            {{ forms.textarea(label='', name='content', placeholder='', place='0', size='12', rows='6') }}
+            {{ forms.button('回复', place='0', size='2') }}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}
+{% block body_static %}
+    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
+{% endblock %}

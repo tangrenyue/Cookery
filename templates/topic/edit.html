@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}编辑话题{% endblock %}
+{% block sidebar %}
+    {% include 'base/sidebar_markdown.html' %}
+{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('编辑话题') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('topic.update'), class='textarea') %}
+        {% call forms.select(label='选择版块', name='board_id', place='0', size='3') %}
+            {% for b in bs %}
+                {% if b.id == topic.board_id %}
+                <option value="{{ b.id }}" selected>{{ b.title }}</option>
+                {% else %}
+                    <option value="{{ b.id }}">{{ b.title }}</option>
+                {% endif %}
+            {% endfor %}
+        {% endcall %}
+        {{ forms.hidden_input(name='id', value=topic.id) }}
+        {{ forms.hidden_input(name='next', value=request.referrer) }}
+        {{ forms.hidden_input(name='token', value=session.get('token')) }}
+        {{ forms.input(label='', name='title', value=topic.title, place='0', size='12') }}
+        {{ forms.textarea(label='', name='content', value=topic.content, place='0', size='12', rows='18') }}
+        {{ forms.button('提交', place='0', size='12') }}
+    {% endcall %}
+{% endblock %}

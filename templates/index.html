@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% import 'macro/lists.html' as lists %}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {% if b_id == -1 %}
+                <a href="{{ url_for('index.index') }}" class="btn btn-success btn-xs">全部</a>
+                {% for b in bs %}
+                    <a href="{{ url_for('index.index', board_id=b.id) }}" class="btn btn-link btn-xs">{{ b.title }}</a>
+                {% endfor %}
+            {% else %}
+                <a href="{{ url_for('index.index') }}" class="btn btn-link btn-xs">全部</a>
+                {% for b in bs %}
+                    {% if b.id == b_id %}
+                        <a href="{{ url_for('index.index', board_id=b.id) }}"
+                           class="btn btn-success btn-xs">{{ b.title }}</a>
+                    {% else %}
+                        <a href="{{ url_for('index.index', board_id=b.id) }}"
+                           class="btn btn-link btn-xs">{{ b.title }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        {{ lists.topic(ts) }}
+        <div class="panel-footer panel-footer-pagination">
+            {{ lists.pagination(page, pages, b_id) }}
+        </div>
+    </div>
+
+{% endblock %}

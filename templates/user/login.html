@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}登录{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('登录') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('user.login')) %}
+        {{ forms.hidden_input(name='next', value=request.referrer) }}
+        {{ forms.input(label='用户名', name='username', type='text', placeholder='username') }}
+        {{ forms.input(label='密码', name='password', type='password', placeholder='password') }}
+        {{ forms.button('登录') }}
+    {% endcall %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% import 'macro/panels.html' as panels %}
+{% import 'macro/lists.html' as lists %}
+{% block title %}{{ user.username }}最近创建的主题{% endblock %}
+{% block content %}
+    {% call panels.heading() %}
+        {{ panels.breadcrumb(user.username+' 的主页', active=false, url=url_for('user.profile', username=user.username)) }}
+    {% endcall %}
+    {% call panels.panel_heading(user.username+' 最近创建的主题') %}
+        {{ lists.topic(ts) }}
+        {% call panels.panel_footer(class='panel-footer-pagination') %}
+            {{ lists.pagination(page=page, pages=pages, url='user.topics', id=user.id) }}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}

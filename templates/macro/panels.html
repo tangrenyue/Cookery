@@ -1,0 +1,69 @@
+{%- macro panel(header) %}
+    <div class="panel panel-default">
+        <div class="panel-heading">{{ header }}</div>
+        <div class="panel-body">
+            {{ caller() }}
+        </div>
+    </div>
+{% endmacro -%}
+
+{%- macro panel_profile(header, user) %}
+    <div class="panel panel-default">
+        <div class="panel-heading">{{ header }}</div>
+        <div class="panel-body">
+             <div class="media">
+                <div class="media-left media-middle">
+                    <a href="{{ url_for("user.profile", username=user.username) }}">
+                        <img class="media-object img-rounded user-avatar" src="{{ user.user_avatar }}" title="{{ user.username }}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><a
+                            href="{{ url_for("user.profile", username=user.username) }}">{{ user.username }}</a>
+                    </h4>
+                    <em>
+                        <small>“ {{ user.signature|default('这家伙很懒，什么个性签名都没有留下。', true) }}”</small>
+                    </em>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro -%}
+
+{%- macro panel_button(caption='Button', href='#') %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <a href="{{ href }}" class="btn btn-success btn-lg">{{ caption }}</a>
+        </div>
+    </div>
+{% endmacro -%}
+
+{%- macro breadcrumb(caption, active=true, url='#') %}
+    <ul class='breadcrumb'>
+        <li><a href='{{ url_for('index.index') }}'>主页</a></li>
+        {% if active %}
+            <li class='active'>{{ caption }}</li>
+        {% else %}
+            <li><a href='{{ url }}'>{{ caption }}</a></li>
+        {% endif %}
+    </ul>
+{% endmacro -%}
+
+{%- macro panel_heading(header) %}
+    <div class="panel panel-default">
+        <div class="panel-heading">{{ header }}</div>
+        {{ caller() }}
+    </div>
+{% endmacro -%}
+
+{%- macro heading() %}
+    <div class="panel panel-default">
+        <div class="panel-heading">{{ caller() }}</div>
+    </div>
+{% endmacro -%}
+
+{%- macro panel_footer(class) %}
+    <div class="panel-footer {{ class }}">
+        {{ caller() }}
+    </div>
+{% endmacro -%}

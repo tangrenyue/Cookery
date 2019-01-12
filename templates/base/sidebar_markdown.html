@@ -1,0 +1,12 @@
+{% import 'macro/panels.html' as panels %}
+{% call panels.panel('Markdown 语法参考') %}
+    <ul class="list-unstyled">
+        <li>### 单行的标题</li>
+        <li>**粗体**</li>
+        <li>`console.log('行内代码')`</li>
+        <li>```\n code \n``` 标记代码块</li>
+        <li>[内容](链接)</li>
+        <li>![文字说明](图片链接)</li>
+    </ul>
+    <span class="text-muted"><a href="https://segmentfault.com/markdown">Markdown 文档</a></span>
+{% endcall %}

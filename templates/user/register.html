@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}注册{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('注册') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('user.register')) %}
+        {{ forms.input(label='用户名', name='username', type='text', placeholder='username') }}
+        {{ forms.input(label='密码', name='password', type='password', placeholder='password') }}
+        {{ forms.button('注册') }}
+    {% endcall %}
+{% endblock %}
+
+

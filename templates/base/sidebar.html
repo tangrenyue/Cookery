@@ -1,0 +1,30 @@
+{% import 'macro/panels.html' as panels %}
+{% if user %}
+    {{ panels.panel_profile('用户信息', user) }}
+{% elif author %}
+    {{ panels.panel_profile('作者', author) }}
+{% elif g.user %}
+    {{ panels.panel_profile('个人信息', g.user) }}
+{% endif %}
+
+{% if g.user %}
+    {{ panels.panel_button(href=url_for('topic.create'), caption='发布话题') }}
+{% else %}
+    {% call panels.panel('Cookery Club') %}
+        <div class="text-center">
+            你可以 <a href="{{ url_for('index.login') }}" class="btn btn-primary btn-xs">登录</a> 或
+            <a href="{{ url_for('index.register') }}" class="btn btn-primary btn-xs">注册</a>
+        </div>
+    {% endcall %}
+{% endif %}
+
+<img src="../static/uploads/fooder.jpg" class="img-responsive" alt="Responsive image">
+
+<p>
+<blockquote> Cooking is all about people. Food is maybe the only universal thing that really has the power to bring everyone together.
+    No matter what culture, everywhere around the world, people get together to eat.
+</blockquote>
+</p>
+
+<img src="../static/uploads/food.jpg" class="img-responsive" alt="Responsive image">
+

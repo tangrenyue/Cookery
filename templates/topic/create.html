@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}发布话题{% endblock %}
+{% block sidebar %}
+    {% include 'base/sidebar_markdown.html' %}
+{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('发布话题') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('topic.add'), class='textarea') %}
+        {% call forms.select(label='选择版块', name='board_id', place='0', size='3') %}
+            {% for b in bs %}
+                <option value="{{ b.id }}">{{ b.title }}</option>
+            {% endfor %}
+        {% endcall %}
+        {{ forms.hidden_input(name='token', value=session.get('token')) }}
+        {{ forms.input(label='', name='title', placeholder='请输入标题', place='0', size='12') }}
+        {{ forms.textarea(label='', name='content', placeholder='正文支持 Markdown 语法', place='0', size='12', rows='18') }}
+        {{ forms.button('提交', place='0', size='12') }}
+    {% endcall %}
+{% endblock %}

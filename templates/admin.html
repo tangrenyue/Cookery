@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% block title %}管理员{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('管理员功能') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('admin.add_board')) %}
+        {{ forms.hidden_input(name='token', value=session.get('token')) }}
+        {{ forms.input(label='添加板块', name='title', type='text', placeholder='title') }}
+        {{ forms.button('添加') }}
+    {% endcall %}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    {% call panels.panel('添加管理员') %}
+        {% call forms.form(url_for('admin.add_admin')) %}
+            {{ forms.hidden_input(name='token', value=session.get('token')) }}
+            {{ forms.input(label='用户名', name='username', type='text', placeholder='username') }}
+            {{ forms.button('设为管理员') }}
+        {% endcall %}
+    {% endcall %}
+    {% call panels.panel('删除用户') %}
+        {% call forms.form(url_for('admin.delete_user')) %}
+            {{ forms.hidden_input(name='token', value=session.get('token')) }}
+            {{ forms.input(label='用户名', name='username', type='text', placeholder='username') }}
+            {{ forms.button('删除该用户') }}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}

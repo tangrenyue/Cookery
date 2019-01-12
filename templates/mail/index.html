@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% import 'macro/forms.html' as forms %}
+{% import 'macro/panels.html' as panels %}
+{% import 'macro/lists.html' as lists %}
+{% block title %}消息{% endblock %}
+{% block sidebar %}
+    {{ super() }}
+    {{ panels.panel_button(href=url_for('mail.read_all', token=session.get('token')), caption='全部设为已读') }}
+{% endblock %}
+{% block content_header %}
+    {{ panels.breadcrumb('发送消息') }}
+{% endblock %}
+{% block content_body %}
+    {% call forms.form(url_for('mail.send'), class='textarea') %}
+        {{ forms.hidden_input(name='token', value=session.get('token')) }}
+        {{ forms.input(label='用户名', name='username', placeholder='username', size='6', place='3') }}
+        {{ forms.input(label='标题', name='title', placeholder='title', size='6', place='3') }}
+        {{ forms.textarea(label='正文', name='content', placeholder='正文支持 Markdown 语法', size='6', rows='6', place='3') }}
+        {{ forms.button('发送消息') }}
+    {% endcall %}
+{% endblock %}
+{% block content %}
+    {{ super() }}
+    {% call panels.panel_heading('未读消息') %}
+        {{ lists.mail(unread_mails) }}
+    {% endcall %}
+    {% call panels.panel_heading('已读消息') %}
+        {{ lists.mail(old_mails) }}
+    {% endcall %}
+    {% call panels.panel_heading('已发送的消息') %}
+        {{ lists.mail(sent_mails) }}
+    {% endcall %}
+{% endblock %}
